@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter</title>
+    <script>
+        async function incrementCounter() {
+            const response = await fetch('/increment/', { method: 'POST', headers: { 'X-CSRFToken': getCookie('csrftoken') } });
+            const data = await response.json();
+            document.getElementById('counter').innerText = data.count;
+        }
+
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</head>
+<body>
+    <h1>Counter App</h1>
+    <p>Current Count: <span id="counter">0</span></p>
+    <button onclick="incrementCounter()">Increment Counter</button>
+</body>
+</html>
+
